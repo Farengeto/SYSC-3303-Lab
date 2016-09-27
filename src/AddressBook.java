@@ -20,4 +20,8 @@ public class AddressBook {
 	public void removeBuddy(BuddyInfo buddy){
 		buddies.remove(buddy);
 	}
+	
+	public void helloWorld(){
+		System.out.println("Hello World!");
+	}
 }
