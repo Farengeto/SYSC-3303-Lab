@@ -4,6 +4,16 @@ public class BuddyInfo {
 	private String address;
 	private String phoneNumber;
 	
+	public BuddyInfo(){
+		this(null,null,null);
+	}
+	
+	public BuddyInfo(String name, String address, String phoneNumber){
+		this.name = name;
+		this.address = address;
+		this.phoneNumber = phoneNumber;
+	}
+	
 	public static void main(String[] args) {
 		System.out.println("Buddy Info:");
 		BuddyInfo b = new BuddyInfo();
