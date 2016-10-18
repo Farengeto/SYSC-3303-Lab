@@ -45,4 +45,12 @@ public class BuddyInfo {
 		this.phoneNumber = phoneNumber;
 	}
 	
+	public String toString(){
+		return name + ": " + address + ", " + phoneNumber;
+	}
+	
+	public boolean equals(BuddyInfo b){
+		return (name.equals(b.getName()) && address.equals(b.getAddress()) && phoneNumber.equals(b.getPhoneNumber()));
+	}
+	
 }

@@ -21,7 +21,19 @@ public class AddressBook {
 		buddies.remove(buddy);
 	}
 	
+	public ArrayList<BuddyInfo> getBuddies(){
+		return buddies;
+	}
+	
 	public void helloWorld(){
 		System.out.println("Hello World!");
+	}
+	
+	public String toString(){
+		String s = "";
+		for(BuddyInfo b : buddies){
+			s += b.toString() + '\n';
+		}
+		return s;
 	}
 }
