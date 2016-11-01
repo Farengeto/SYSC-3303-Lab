@@ -8,6 +8,7 @@ public class addBuddyListener implements ActionListener{
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		menu.addBuddy();
+		menu.getBook().addBuddy(menu);
+		menu.setText("Buddy Added");
 	}
 }

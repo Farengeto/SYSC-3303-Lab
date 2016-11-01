@@ -1,6 +1,7 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+//whole class depreceated due to GUI changes
 public class displayListener implements ActionListener{
 	private MenuFrame menu;
 	
@@ -9,6 +10,6 @@ public class displayListener implements ActionListener{
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		menu.display();
+		//menu.display();
 	}
 }

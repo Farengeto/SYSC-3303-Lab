@@ -1,9 +1,12 @@
 import java.util.ArrayList;
-public class AddressBook {
-	ArrayList<BuddyInfo> buddies;
+
+import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
+
+public class AddressBook extends DefaultListModel<BuddyInfo>{
 	
 	public AddressBook(){
-		buddies = new ArrayList<>();
+		super();
 	}
 	
 	public static void main(String[] args){
@@ -13,27 +16,30 @@ public class AddressBook {
 		System.out.println("Address Book");
 	}
 	
+	public void addBuddy(MenuFrame m){
+		String n = (String)(JOptionPane.showInputDialog(m,"Input Buddy name:","Add Buddy",JOptionPane.PLAIN_MESSAGE));
+		String a = (String)(JOptionPane.showInputDialog(m,"Input Buddy address:","Add Buddy",JOptionPane.PLAIN_MESSAGE));
+		String p = (String)(JOptionPane.showInputDialog(m,"Input Buddy phone number:","Add Buddy",JOptionPane.PLAIN_MESSAGE));
+		BuddyInfo b = new BuddyInfo(n,a,p);
+		addElement(b);
+	}
+	
 	public void addBuddy(BuddyInfo buddy){
-		buddies.add(buddy);
+		addElement(buddy);
+	}
+	
+	public void editBuddy(MenuFrame m, int i){
+		if(i != -1 && get(i) != null){
+			String n = (String)(JOptionPane.showInputDialog(m,"Input Buddy name:","Add Buddy",JOptionPane.PLAIN_MESSAGE,null,null,get(i).getName()));
+			String a = (String)(JOptionPane.showInputDialog(m,"Input Buddy address:","Add Buddy",JOptionPane.PLAIN_MESSAGE,null,null,get(i).getAddress()));
+			String p = (String)(JOptionPane.showInputDialog(m,"Input Buddy phone number:","Add Buddy",JOptionPane.PLAIN_MESSAGE,null,null,get(i).getPhoneNumber()));
+			BuddyInfo b = new BuddyInfo(n,a,p);
+			set(i,b);
+		}
 	}
 	
 	public void removeBuddy(BuddyInfo buddy){
-		buddies.remove(buddy);
-	}
-	
-	public ArrayList<BuddyInfo> getBuddies(){
-		return buddies;
-	}
-	
-	public void helloWorld(){
-		System.out.println("Hello World!");
-	}
-	
-	public String toString(){
-		String s = "";
-		for(BuddyInfo b : buddies){
-			s += b.toString() + '\n';
-		}
-		return s;
+		//buddies.remove(buddy);
+		removeElement(buddy);
 	}
 }

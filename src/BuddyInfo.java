@@ -3,6 +3,7 @@ public class BuddyInfo {
 	private String name;
 	private String address;
 	private String phoneNumber;
+	private int age;
 	
 	public BuddyInfo(){
 		this(null,null,null);
@@ -12,6 +13,11 @@ public class BuddyInfo {
 		this.name = name;
 		this.address = address;
 		this.phoneNumber = phoneNumber;
+		this.age = 0;
+	}
+	
+	public BuddyInfo(BuddyInfo b){
+		this(b.getName(),b.getAddress(),b.getPhoneNumber());
 	}
 	
 	public static void main(String[] args) {
@@ -45,12 +51,31 @@ public class BuddyInfo {
 		this.phoneNumber = phoneNumber;
 	}
 	
+	public String greeting(){
+		return ("Hello, " + name + "!");
+	}
+	
+	public int getAge() {
+		return age;
+	}
+
+	public void setAge(int age) {
+		this.age = age;
+	}
+	
+	public boolean isOver18(){
+		return(age >= 18);
+	}
+
 	public String toString(){
 		return name + ": " + address + ", " + phoneNumber;
 	}
 	
 	public boolean equals(BuddyInfo b){
-		return (name.equals(b.getName()) && address.equals(b.getAddress()) && phoneNumber.equals(b.getPhoneNumber()));
+		if(b != null){
+			return (name.equals(b.getName()) && address.equals(b.getAddress()) && phoneNumber.equals(b.getPhoneNumber()));
+		}
+		return false;
 	}
 	
 }

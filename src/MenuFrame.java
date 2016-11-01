@@ -7,47 +7,22 @@ import javax.swing.*;
 
 public class MenuFrame extends JFrame{
 	private AddressBook book;
-	private JTextArea list;
+	//private JTextArea list;
+	private JList<BuddyInfo> list;
 	private JMenuItem create;
 	private JMenuItem save;
-	private JMenuItem display;
+	//private JMenuItem display;
 	private JMenuItem addBuddies;
+	private JMenuItem edit;
+	private JMenuItem remove;
+	private JLabel label;
+	private int selected;
 	
 	public MenuFrame(){
 		super("Address Book");
-		/*name = new JTextField("");
-		address = new JTextField("");
-		phoneNumber = new JTextField("");
-		addBook = new JButton("Create Address Book");
-		addBook.addActionListener(new addBookListener(this));
-		saveBook = new JButton("Save Address Book");
-		saveBook.addActionListener(new saveBookListener(this));
-		saveBook.setEnabled(false);
-		addBuddy = new JButton("Add Buddy");
-		addBuddy.addActionListener(new addBuddyListener(this));
-		addBuddy.setEnabled(false);
-		
-		JPanel bookMenu = new JPanel();
-		bookMenu.setLayout(new GridLayout(1,2));
-		bookMenu.add(addBook);
-		bookMenu.add(saveBook);*/
-		
-		JScrollPane listMenu = new JScrollPane();
-		listMenu.setSize(200, 500);
-		list = new JTextArea();
-		//list.append("Address Book:\n");
-		listMenu.add(list);
-		list.setEditable(false);
-		
-		/*JPanel buddyMenu = new JPanel();
-		buddyMenu.setLayout(new GridLayout(3,3));
-		buddyMenu.add(new JLabel("Name"));
-		buddyMenu.add(new JLabel("Address"));
-		buddyMenu.add(new JLabel("Phone Number"));
-		buddyMenu.add(name);
-		buddyMenu.add(address);
-		buddyMenu.add(phoneNumber);
-		buddyMenu.add(addBuddy);*/
+		selected = -1;
+		list = new JList<>();
+		list.addListSelectionListener(new SelectionListener(this));
 		
 		setLayout(new BorderLayout());
 		JMenuBar menuBar = new JMenuBar();
@@ -57,25 +32,33 @@ public class MenuFrame extends JFrame{
 		save = new JMenuItem("Save");
 		save.setEnabled(false);
 		save.addActionListener(new saveBookListener(this));
-		display = new JMenuItem("Display");
+		/*display = new JMenuItem("Display");
 		display.setEnabled(false);
-		display.addActionListener(new displayListener(this));
+		display.addActionListener(new displayListener(this));*/
 		addressMenu.add(create);
 		addressMenu.add(save);
-		addressMenu.add(display);
+		//addressMenu.add(display);
 		menuBar.add(addressMenu);
 		JMenu buddiesMenu = new JMenu("Buddies");
 		addBuddies = new JMenuItem("Add");
 		addBuddies.setEnabled(false);
 		addBuddies.addActionListener(new addBuddyListener(this));
+		edit = new JMenuItem("Edit");
+		edit.setEnabled(false);
+		edit.addActionListener(new EditListener(this));
+		remove = new JMenuItem("Remove");
+		remove.setEnabled(false);
+		remove.addActionListener(new RemoveListener(this));
 		buddiesMenu.add(addBuddies);
+		buddiesMenu.add(edit);
+		buddiesMenu.add(remove);
 		menuBar.add(buddiesMenu);
+		label = new JLabel("Create an Address Book to begin");
 		add(menuBar,BorderLayout.NORTH);
-		//add(bookMenu,BorderLayout.NORTH);
-		//add(listMenu,BorderLayout.CENTER);
 		add(new JScrollPane(list),BorderLayout.CENTER);
-		//add(buddyMenu,BorderLayout.SOUTH);
+		add(label,BorderLayout.SOUTH);
 		pack();
+		setSize(250,500);
 		setResizable(false);
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -85,32 +68,52 @@ public class MenuFrame extends JFrame{
 		MenuFrame m = new MenuFrame();
 	}
 	
-	public void display(){
+	/*public void display(){
 		addText(book.toString());
 	}
 	
 	public void addText(String s){
 		list.append(s + "\n");
 		pack();
+	}*/
+	
+	public void setText(String s){
+		label.setText(s);
+	}
+	
+	public AddressBook getBook(){
+		return book;
+	}
+	
+	public JList<BuddyInfo> getList(){
+		return list;
+	}
+	
+	public int getSelected(){
+		return selected;
 	}
 	
 	public void addBook(){
 		book = new AddressBook();
+		list.setModel(book);
 		addBuddies.setEnabled(true);
 		save.setEnabled(true);
-		display.setEnabled(true);
-		addText("Address Book Created\n");
+		label.setText("Address Book created.");
+		//display.setEnabled(true);
+		//addText("Address Book Created\n");
 	}
 	
-	public void addBuddy(){
-		//BuddyInfo b = new BuddyInfo(name.getText(),address.getText(),phoneNumber.getText());
-		//String n = (String)(JOptionPane.showInputDialog(this,"Input Buddy name:"));
-		String n = (String)(JOptionPane.showInputDialog(this,"Input Buddy name:","Add Buddy",JOptionPane.PLAIN_MESSAGE));
-		String a = (String)(JOptionPane.showInputDialog(this,"Input Buddy address:","Add Buddy",JOptionPane.PLAIN_MESSAGE));
-		String p = (String)(JOptionPane.showInputDialog(this,"Input Buddy phone number:","Add Buddy",JOptionPane.PLAIN_MESSAGE));
-		BuddyInfo b = new BuddyInfo(n,a,p);
-		book.addBuddy(b);
-		addText(b.toString() + "\n");
+	public void select(int i){
+		if(i != -1 && book.get(i) != null){
+			selected = i;
+			edit.setEnabled(true);
+			remove.setEnabled(true);
+		}
+		else{
+			selected = -1;
+			edit.setEnabled(false);
+			remove.setEnabled(false);
+		}
 	}
 	
 	public void save(){
@@ -119,6 +122,7 @@ public class MenuFrame extends JFrame{
 				PrintWriter writer = new PrintWriter("AddressBook.txt", "UTF-8");
 				writer.print(book.toString());
 				writer.close();
+				label.setText("Saved!");
 			}
 		}catch(IOException e){}
 	}
