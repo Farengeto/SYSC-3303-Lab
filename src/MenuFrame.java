@@ -11,6 +11,7 @@ public class MenuFrame extends JFrame{
 	private JList<BuddyInfo> list;
 	private JMenuItem create;
 	private JMenuItem save;
+	private JMenuItem load;
 	//private JMenuItem display;
 	private JMenuItem addBuddies;
 	private JMenuItem edit;
@@ -32,11 +33,14 @@ public class MenuFrame extends JFrame{
 		save = new JMenuItem("Save");
 		save.setEnabled(false);
 		save.addActionListener(new saveBookListener(this));
+		load = new JMenuItem("Import");
+		load.addActionListener(new importBookListener(this));
 		/*display = new JMenuItem("Display");
 		display.setEnabled(false);
 		display.addActionListener(new displayListener(this));*/
 		addressMenu.add(create);
 		addressMenu.add(save);
+		addressMenu.add(load);
 		//addressMenu.add(display);
 		menuBar.add(addressMenu);
 		JMenu buddiesMenu = new JMenu("Buddies");
@@ -65,7 +69,7 @@ public class MenuFrame extends JFrame{
 	}
 	
 	public static void main(String[] args){
-		BuddyInfo b = MenuFrame.importBuddy("Travis/555 Fake Street/(555) 123-4567");
+		BuddyInfo b = AddressBook.importBuddy("Travis/555 Fake Street/(555) 123-4567");
 		System.out.println(b);
 		MenuFrame m = new MenuFrame();
 	}
@@ -96,7 +100,11 @@ public class MenuFrame extends JFrame{
 	}
 	
 	public void addBook(){
-		book = new AddressBook();
+		addBook(new AddressBook());
+	}
+	
+	public void addBook(AddressBook a){
+		book = a;
 		list.setModel(book);
 		addBuddies.setEnabled(true);
 		save.setEnabled(true);
@@ -118,7 +126,7 @@ public class MenuFrame extends JFrame{
 		}
 	}
 	
-	public static BuddyInfo importBuddy(String s){
+	/*public static BuddyInfo importBuddy(String s){
 		Scanner sc = new Scanner(s);
 		sc.useDelimiter("/");
 		String b = sc.next();
@@ -126,20 +134,36 @@ public class MenuFrame extends JFrame{
 		String n = sc.next();
 		sc.close();
 		return new BuddyInfo(b,a,n);
+	}*/
+	
+	public void importBook(){
+		System.out.println("Importing");
+		AddressBook a = new AddressBook();
+		a.importBook();
+		addBook(a);
+		label.setText("Imported!");
+		/*try{
+			Scanner reader = new Scanner(new File("AddressBook.txt", "UTF-8"));
+			AddressBook book = new AddressBook();
+			while(reader.hasNextLine()){
+				BuddyInfo b = importBuddy(reader.nextLine());
+				book.addBuddy(b);
+			}
+			reader.close();
+		}catch(IOException e){}*/
 	}
 	
 	public void export(){
-		try{
-			if(book != null){
-				PrintWriter writer = new PrintWriter("AddressBook.txt", "UTF-8");
-				//PrintWriter writer = new PrintWriter(new FileWriter("AddressBook.txt"));
-				String s = book.toString();
-				System.out.print(s);
-				//writer.print(s);
-				writer.write(s);
-				writer.close();
-				label.setText("Saved!");
-			}
-		}catch(IOException e){}
+		if(book != null){
+			/*PrintWriter writer = new PrintWriter("AddressBook.txt", "UTF-8");
+			//PrintWriter writer = new PrintWriter(new FileWriter("AddressBook.txt"));
+			String s = book.toString();
+			System.out.print(s);
+			//writer.print(s);
+			writer.write(s);
+			writer.close();*/
+			book.export();
+			label.setText("Saved!");
+		}
 	}
 }

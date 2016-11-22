@@ -51,4 +51,14 @@ public class AddressBookTest {
 		book.clear();
 		assertEquals("size should be 0.",0,book.size());
 	}
+	
+	@Test
+	public void testIO(){
+		book.addBuddy(testBuddy1);
+		book.addBuddy(testBuddy2);
+		book.export();
+		AddressBook book2 = new AddressBook();
+		book2.importBook();
+		assertTrue("Books should be equal.",book.equals(book2));
+	}
 }
