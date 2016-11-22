@@ -42,4 +42,12 @@ public class AddressBook extends DefaultListModel<BuddyInfo>{
 		//buddies.remove(buddy);
 		removeElement(buddy);
 	}
+	
+	public String toString(){
+		String s = "";
+		for(int i = 0; i < getSize(); i++){
+			s += elementAt(i).toString() + System.lineSeparator();
+		}
+		return s;
+	}
 }

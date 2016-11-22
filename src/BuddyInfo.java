@@ -68,7 +68,7 @@ public class BuddyInfo {
 	}
 
 	public String toString(){
-		return name + ": " + address + ", " + phoneNumber;
+		return name + "/" + address + "/" + phoneNumber;
 	}
 	
 	public boolean equals(BuddyInfo b){

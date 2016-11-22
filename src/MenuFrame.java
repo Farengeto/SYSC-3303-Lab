@@ -1,7 +1,7 @@
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
+import java.util.Scanner;
 
 import javax.swing.*;
 
@@ -65,6 +65,8 @@ public class MenuFrame extends JFrame{
 	}
 	
 	public static void main(String[] args){
+		BuddyInfo b = MenuFrame.importBuddy("Travis/555 Fake Street/(555) 123-4567");
+		System.out.println(b);
 		MenuFrame m = new MenuFrame();
 	}
 	
@@ -116,11 +118,25 @@ public class MenuFrame extends JFrame{
 		}
 	}
 	
-	public void save(){
+	public static BuddyInfo importBuddy(String s){
+		Scanner sc = new Scanner(s);
+		sc.useDelimiter("/");
+		String b = sc.next();
+		String a = sc.next();
+		String n = sc.next();
+		sc.close();
+		return new BuddyInfo(b,a,n);
+	}
+	
+	public void export(){
 		try{
 			if(book != null){
 				PrintWriter writer = new PrintWriter("AddressBook.txt", "UTF-8");
-				writer.print(book.toString());
+				//PrintWriter writer = new PrintWriter(new FileWriter("AddressBook.txt"));
+				String s = book.toString();
+				System.out.print(s);
+				//writer.print(s);
+				writer.write(s);
 				writer.close();
 				label.setText("Saved!");
 			}
