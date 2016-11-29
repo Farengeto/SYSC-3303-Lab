@@ -11,6 +11,16 @@ import java.util.Scanner;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.Attributes;
+import org.xml.sax.helpers.DefaultHandler;
 
 public class AddressBook extends DefaultListModel<BuddyInfo> implements Serializable{
 	
@@ -57,6 +67,20 @@ public class AddressBook extends DefaultListModel<BuddyInfo> implements Serializ
 		for(int i = 0; i < getSize(); i++){
 			s += elementAt(i).toString() + System.lineSeparator();
 		}
+		return s;
+	}
+	
+	public String toXML(){
+		String s = "<AddressBook>" + System.lineSeparator();
+		for(int i = 0; i < getSize(); i++){
+			BuddyInfo b = elementAt(i);
+			s += "\t<BuddyInfo>"  + System.lineSeparator();
+			s += "\t\t<name>" + b.getName() + "</name>" + System.lineSeparator();
+			s += "\t\t<address>" + b.getAddress() + "</address>" + System.lineSeparator();
+			s += "\t\t<phoneNumber>" + b.getPhoneNumber() + "</phoneNumber>" + System.lineSeparator();
+			s += "\t</BuddyInfo>"  + System.lineSeparator();
+		}
+		s += "</AddressBook>"  + System.lineSeparator();
 		return s;
 	}
 	
@@ -123,6 +147,85 @@ public class AddressBook extends DefaultListModel<BuddyInfo> implements Serializ
 		}catch(IOException e){
 			e.printStackTrace();
 		}
+	}
+	
+	public void exportToXMLFile(String filename){
+		try{
+			PrintWriter writer = new PrintWriter(filename, "UTF-8");
+			String s = toXML();
+			writer.write(s);
+			writer.close();
+		}catch(IOException e){
+			System.err.println("IO Error, export failed");
+		}
+	}
+	
+	/*public static void importFromXmlFileSAX(String filename) throws Exception{
+		File f = new File(filename);
+		SAXParserFactory spf = SAXParserFactory.newInstance();
+		SAXParser s = spf.newSAXParser();
+		
+		DefaultHandler dh = new DefaultHandler(){
+			public void startElement(String u, String ln, String qName, Attributes a){
+				System.out.println("START: " + qName);
+			}
+			
+			public void endElement(String uri, String localName, String qName){
+				System.out.println("END: " + qName);
+			}
+			
+			public void characters(char[] ch, int start, int length){
+				System.out.println("CHARS: " + new String(ch,start,length));
+			}
+		};
+		s.parse(f, dh);
+	}*/
+	
+	public static AddressBook importFromXmlFileDOM(String filename) throws Exception{
+		File f = new File(filename);
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder d = factory.newDocumentBuilder();
+		Document doc = d.parse(f);
+		AddressBook a = new AddressBook();
+		System.out.println(doc.getDocumentElement().getNodeName());
+		if(doc.getDocumentElement().getNodeName().equals("AddressBook")){ //else not an AddressBook
+			NodeList lst = doc.getDocumentElement().getChildNodes(); //get BuddyInfos
+			for(int ii=0; ii<lst.getLength(); ii++){
+				Node n = lst.item(ii);
+				System.out.println("\t" + n.getNodeName());
+				if(n.getNodeName().equals("BuddyInfo")){
+					BuddyInfo b = new BuddyInfo();
+					NodeList lst2 = n.getChildNodes();
+					for(int i=0; i<lst2.getLength(); i++){
+						Node nb = lst2.item(i);
+						System.out.println("\t\t" + nb.getNodeName());
+						if(nb.getNodeName().equals("name")){
+							b.setName(nb.getTextContent());
+						}
+						else if(nb.getNodeName().equals("address")){
+							b.setAddress(nb.getTextContent());
+						}
+						else if(nb.getNodeName().equals("phoneNumber")){
+							b.setPhoneNumber(nb.getTextContent());
+						}
+						else if(nb.getNodeName().equals("#text")){} //ignore without raising errors
+						else{
+							System.err.println("Invalid AddressBook tag: " + n.getNodeName());
+						}
+					}
+					a.addBuddy(b);
+					
+				}
+				else if(n.getNodeName().equals("#text")){} //ignore without raising errors
+				else{
+					//System.err.println("Invalid AddressBook tag: " + n.getNodeName());
+				}
+			}
+		}
+		else{
+			System.err.println("Invalid AddressBook tag: " + doc.getDocumentElement().getNodeName());
+		}
+		return a;
 	}
 	
 	public boolean equals(AddressBook b){

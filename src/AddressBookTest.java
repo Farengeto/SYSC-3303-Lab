@@ -71,4 +71,19 @@ public class AddressBookTest {
 		AddressBook book2 = AddressBook.serialImport(file);
 		assertTrue("Books should be equal.",book.equals(book2));
 	}
+	
+	@Test
+	public void testXML(){
+		book.addBuddy(testBuddy1);
+		book.addBuddy(testBuddy2);
+		String file = "XMLTest.xml";
+		book.exportToXMLFile(file);
+		AddressBook book2 = null;
+		try{
+			book2 = AddressBook.importFromXmlFileDOM(file);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		assertTrue("Books should be equal.",book.equals(book2));
+	}
 }
