@@ -1,5 +1,7 @@
+import java.io.Serializable;
 
-public class BuddyInfo {
+
+public class BuddyInfo implements Serializable{
 	private String name;
 	private String address;
 	private String phoneNumber;

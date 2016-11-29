@@ -1,13 +1,18 @@
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 
-public class AddressBook extends DefaultListModel<BuddyInfo>{
+public class AddressBook extends DefaultListModel<BuddyInfo> implements Serializable{
 	
 	public AddressBook(){
 		super();
@@ -65,29 +70,59 @@ public class AddressBook extends DefaultListModel<BuddyInfo>{
 		return new BuddyInfo(b,a,n);
 	}
 	
-	public void importBook(){
+	public static AddressBook importBook(String filename){
+		AddressBook book = new AddressBook();
 		try{
-			Scanner reader = new Scanner(new File("AddressBook.txt"));
+			Scanner reader = new Scanner(new File(filename));
 			while(reader.hasNextLine()){
 				String s = reader.nextLine();
 				if(s.length() > 0){ //skip empty end lines
 					BuddyInfo b = importBuddy(s);
-					addBuddy(b);
+					book.addBuddy(b);
 				}
 			}
 			reader.close();
 		}catch(IOException e){
 			System.err.println("File not found");
 		}
+		return book;
 	}
 	
-	public void export(){
+	public void export(String filename){
 		try{
-			PrintWriter writer = new PrintWriter("AddressBook.txt", "UTF-8");
+			PrintWriter writer = new PrintWriter(filename, "UTF-8");
 			String s = toString();
 			writer.write(s);
 			writer.close();
-		}catch(IOException e){}
+		}catch(IOException e){
+			System.err.println("IO Error, export failed");
+		}
+	}
+	
+	public static AddressBook serialImport(String filename){
+		AddressBook a = new AddressBook();
+		try{
+			FileInputStream fos = new FileInputStream(filename);
+			ObjectInputStream oos = new ObjectInputStream(fos);
+			a = (AddressBook)oos.readObject();
+			oos.close();
+		}catch(IOException e){
+			e.printStackTrace();
+		}catch(ClassNotFoundException e){
+			e.printStackTrace();
+		}
+		return a;
+	}
+	
+	public void serialExport(String filename){
+		try{
+			FileOutputStream fos = new FileOutputStream(filename);
+			ObjectOutputStream oos = new ObjectOutputStream(fos);
+			oos.writeObject(this);
+			oos.close();
+		}catch(IOException e){
+			e.printStackTrace();
+		}
 	}
 	
 	public boolean equals(AddressBook b){

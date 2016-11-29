@@ -138,8 +138,7 @@ public class MenuFrame extends JFrame{
 	
 	public void importBook(){
 		System.out.println("Importing");
-		AddressBook a = new AddressBook();
-		a.importBook();
+		AddressBook a = AddressBook.importBook("AddressBook.txt");
 		addBook(a);
 		label.setText("Imported!");
 		/*try{
@@ -162,7 +161,7 @@ public class MenuFrame extends JFrame{
 			//writer.print(s);
 			writer.write(s);
 			writer.close();*/
-			book.export();
+			book.export("AddressBook.txt");
 			label.setText("Saved!");
 		}
 	}

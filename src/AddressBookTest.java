@@ -56,9 +56,19 @@ public class AddressBookTest {
 	public void testIO(){
 		book.addBuddy(testBuddy1);
 		book.addBuddy(testBuddy2);
-		book.export();
-		AddressBook book2 = new AddressBook();
-		book2.importBook();
+		String file = "BookTest.txt";
+		book.export(file);
+		AddressBook book2 = AddressBook.importBook(file);
+		assertTrue("Books should be equal.",book.equals(book2));
+	}
+	
+	@Test
+	public void testSerial(){
+		book.addBuddy(testBuddy1);
+		book.addBuddy(testBuddy2);
+		String file = "SerialTest.txt";
+		book.serialExport(file);
+		AddressBook book2 = AddressBook.serialImport(file);
 		assertTrue("Books should be equal.",book.equals(book2));
 	}
 }
