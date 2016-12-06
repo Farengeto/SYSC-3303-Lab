@@ -160,27 +160,6 @@ public class AddressBook extends DefaultListModel<BuddyInfo> implements Serializ
 		}
 	}
 	
-	/*public static void importFromXmlFileSAX(String filename) throws Exception{
-		File f = new File(filename);
-		SAXParserFactory spf = SAXParserFactory.newInstance();
-		SAXParser s = spf.newSAXParser();
-		
-		DefaultHandler dh = new DefaultHandler(){
-			public void startElement(String u, String ln, String qName, Attributes a){
-				System.out.println("START: " + qName);
-			}
-			
-			public void endElement(String uri, String localName, String qName){
-				System.out.println("END: " + qName);
-			}
-			
-			public void characters(char[] ch, int start, int length){
-				System.out.println("CHARS: " + new String(ch,start,length));
-			}
-		};
-		s.parse(f, dh);
-	}*/
-	
 	public static AddressBook importFromXmlFileDOM(String filename) throws Exception{
 		File f = new File(filename);
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
