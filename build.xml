@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<project name="Hello" default="print message">
+	<target name="print message">
+		<echo message="Hello from Ant!"/>
+	</target>
+	<target name="packaging">
+		<jar destfile="M:/SYSC 3110/SYSC-3303-Lab/BuddyInfo.jar" basedir="M:/SYSC 3110/SYSC-3303-Lab/bin">
+			<manifest>
+		      <attribute name="Main-Class"
+		            value="MenuFrame"/>
+		    </manifest>
+		</jar>
+	</target>
+</project>
